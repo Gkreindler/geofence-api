@@ -11,11 +11,11 @@ def find_polygon_id(latitude, longitude, shapefile):
     if any(point_in_polygons):
         polygon_ids = shapefile.loc[point_in_polygons, 'id']
         if len(polygon_ids) > 1:
-            return -2  # in multiple polygons, should never happen
+            return "-2"  # in multiple polygons, should never happen
         else:
-            return polygon_ids.iloc[0]
+            return str(polygon_ids.iloc[0])
     else:
-        return -99  # not in any of the polygons
+        return "-99"  # not in any of the polygons
 
 
 if __name__ == '__main__':

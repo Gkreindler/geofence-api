@@ -57,4 +57,3 @@ class GeoFence(Resource):
             return -99  # not in any of the polygons
         
 api.add_resource(GeoFence, '/geofence')
-

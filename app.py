@@ -71,11 +71,11 @@ class Login(Resource):
 
     def get(self):
         deviceid = request.args.get('deviceid')
-        
+
         print("Login query received at time X from device {}".format(deviceid))
 
         if isNumeric(deviceid):
-            deviceid = int(latitude)
+            deviceid = int(deviceid)
 
             return {"success": True, "message": "Login OK for {}".format(deviceid)}, 200
         else:

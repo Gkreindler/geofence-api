@@ -29,6 +29,13 @@ class GeoFence(Resource):
         latitude = request.args.get('latitude')
         longitude = request.args.get('longitude')
 
+        deviceid = request.args.get('deviceid')
+        loginid = request.args.get('loginid')
+
+        # logging
+        print("###xxx###:GEOFENCE. time=TIME,devid={},loginid={},lat={},lon={}".format(deviceid, loginid, latitude,
+                                                                                       longitude))
+
         if isNumeric(latitude) and isNumeric(longitude):
             latitude = float(latitude)
             longitude = float(longitude)
@@ -68,19 +75,90 @@ class GeoFence(Resource):
 
 
 class Login(Resource):
-
     def get(self):
         deviceid = request.args.get('deviceid')
+        loginid = request.args.get('loginid')
 
-        print("Login query received at time X from device {}".format(deviceid))
+        # logging
+        print("###xxx###:LOGIN. time=TIME,devid={},loginid={}".format(deviceid, loginid))
 
-        if isNumeric(deviceid):
+        if isInt(deviceid) and isInt(loginid):
             deviceid = int(deviceid)
+            loginid = int(loginid)
 
-            return {"success": True, "message": "Login OK for {}".format(deviceid)}, 200
+            return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
         else:
-            return {"success": False, "message": "Login deviceid not integer or not provided"}, 400
+            return {"success": False, "message": "Login or deviceid not integer or not provided"}, 400
 
 
-api.add_resource(GeoFence, '/geofence')
+class Logout(Resource):
+    def get(self):
+        deviceid = request.args.get('deviceid')
+        loginid = request.args.get('loginid')
+
+        # logging
+        print("###xxx###:LOGOUT. time=TIME,devid={},loginid={}".format(deviceid, loginid))
+
+        if isInt(deviceid) and isInt(loginid):
+            deviceid = int(deviceid)
+            loginid = int(loginid)
+
+            return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
+        else:
+            return {"success": False, "message": "Login or deviceid not integer or not provided"}, 400
+
+
+class StartTask(Resource):
+    def get(self):
+        deviceid = request.args.get('deviceid')
+        loginid = request.args.get('loginid')
+
+        latitude = request.args.get('latitude')
+        longitude = request.args.get('longitude')
+
+        # logging
+        print("###xxx###:START_TASK. time=TIME,devid={},loginid={},lat={},lon={}".format(deviceid, loginid, latitude,
+                                                                                          longitude))
+
+        if isInt(deviceid) and isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
+            deviceid = int(deviceid)
+            loginid = int(loginid)
+
+            latitude = float(latitude)
+            longitude = float(longitude)
+
+            return {"success": True, "message": "Start Task OK"}, 200
+        else:
+            return {"success": False, "message": "Login or deviceid not integer or lat or long not float, or arguments not provided"}, 400
+
+
+class StopTask(Resource):
+    def get(self):
+        deviceid = request.args.get('deviceid')
+        loginid = request.args.get('loginid')
+
+        latitude = request.args.get('latitude')
+        longitude = request.args.get('longitude')
+
+        # logging
+        print("###xxx###:STOP_TASK. time=TIME,devid={},loginid={},lat={},lon={}".format(deviceid, loginid, latitude,
+                                                                                       longitude))
+
+        if isInt(deviceid) and isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
+            deviceid = int(deviceid)
+            loginid = int(loginid)
+
+            latitude = float(latitude)
+            longitude = float(longitude)
+
+            return {"success": True, "message": "Start Task OK"}, 200
+        else:
+            return {"success": False,
+                    "message": "Login or deviceid not integer or lat or long not float, or arguments not provided"}, 400
+
+
 api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
+api.add_resource(GeoFence, '/geofence')
+api.add_resource(StartTask, '/start')
+api.add_resource(StopTask, '/stop')

@@ -82,8 +82,7 @@ class Login(Resource):
         # logging
         print("###xxx###:LOGIN. time=TIME,devid={},loginid={}".format(deviceid, loginid))
 
-        if isInt(deviceid) and isInt(loginid):
-            deviceid = int(deviceid)
+        if isInt(loginid):
             loginid = int(loginid)
 
             return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
@@ -99,8 +98,7 @@ class Logout(Resource):
         # logging
         print("###xxx###:LOGOUT. time=TIME,devid={},loginid={}".format(deviceid, loginid))
 
-        if isInt(deviceid) and isInt(loginid):
-            deviceid = int(deviceid)
+        if isInt(loginid):
             loginid = int(loginid)
 
             return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
@@ -120,8 +118,7 @@ class StartTask(Resource):
         print("###xxx###:START_TASK. time=TIME,devid={},loginid={},lat={},lon={}".format(deviceid, loginid, latitude,
                                                                                           longitude))
 
-        if isInt(deviceid) and isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
-            deviceid = int(deviceid)
+        if isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
             loginid = int(loginid)
 
             latitude = float(latitude)
@@ -144,8 +141,7 @@ class StopTask(Resource):
         print("###xxx###:STOP_TASK. time=TIME,devid={},loginid={},lat={},lon={}".format(deviceid, loginid, latitude,
                                                                                        longitude))
 
-        if isInt(deviceid) and isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
-            deviceid = int(deviceid)
+        if isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
             loginid = int(loginid)
 
             latitude = float(latitude)

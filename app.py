@@ -52,7 +52,7 @@ class GeoFence(Resource):
             polygon_name = self.find_polygon_id(latitude, longitude, dataframe)
 
             if polygon_name == "-99":
-                return {"success": False, "message": "couldn't find in any grid"}, 200
+                return {"success": False, "message": "couldn't find in any grid and this is a very long message just in case to check what happens when the message is very long let's see"}, 200
             elif polygon_name == "-2":
                 return {"success": False, "message": "found in multiple polygons"}, 200
             return {"success": True, "message": "in neighborhood " + polygon_name}, 200

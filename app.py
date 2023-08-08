@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 import geopandas as gpd
 from shapely.geometry import Point
+import random
 
 
 app = Flask(__name__)
@@ -117,8 +118,8 @@ class StartTask(Resource):
         # logging
         print("###xxx###:START_TASK. time=TIME,devid={},loginid={},lat={},lon={}".format(deviceid, loginid, latitude,
                                                                                           longitude))
-
-        if isInt(loginid) and isNumeric(latitude) and isNumeric(longitude):
+        ru = random.random()
+        if isInt(loginid) and isNumeric(latitude) and isNumeric(longitude) and ru < 0.5:
             loginid = int(loginid)
 
             latitude = float(latitude)

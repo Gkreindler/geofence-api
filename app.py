@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 import geopandas as gpd
+import pandas as pd
 from shapely.geometry import Point
 import random
 
@@ -83,10 +84,19 @@ class Login(Resource):
         # logging
         print("###xxx###:LOGIN. time=TIME,devid={},loginid={}".format(deviceid, loginid))
 
+        # read login IDs
+        allids_path = 'tables/pilot8_allids.csv'
+        allids_df = pd.read_csv(allids_path)
+
         if isInt(loginid):
             loginid = int(loginid)
+            allids = list(allids_df["uniqueid"])
+            print("###xxx###:LOGIN. allids={}".format(allids))
 
-            return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
+            if loginid in allids:
+                return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
+            else:
+                return {"success": False, "message": "Unique ID not in the list {}, {}".format(deviceid, loginid)}, 400
         else:
             return {"success": False, "message": "Login or deviceid not integer or not provided"}, 400
 

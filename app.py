@@ -88,7 +88,7 @@ class GeoFence(Resource):
                 return {
                            "success": False,
                            "message": "Cannot find neighborhood. Please move to a new location and try again."
-                       }, 200
+                       }, 400
 
             elif polygon_name == "-2":
                 return {"success": False, "message": "found in multiple polygons"}, 200
@@ -180,7 +180,7 @@ class StartTask(Resource):
                 return {
                            "success": False,
                            "message": "Cannot find neighborhood. Please move to a new location and try again."
-                       }, 200
+                       }, 400
 
             elif polygon_name == "-2":
                 return {"success": False, "message": "found in multiple polygons"}, 200

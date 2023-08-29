@@ -59,7 +59,7 @@ class GeoFence(Resource):
             elif polygon_name == "-2":
                 return {"success": False, "message": "found in multiple polygons"}, 200
 
-            return {"success": True, "message": "in neighborhood name=" + polygon_name + ", and id=", polygon_id}, 200
+            return {"success": True, "message": "in neighborhood name=" + polygon_name + ", and id=" + polygon_id}, 200
         
         else:
             return {"success": False, "message": "Bad request, latitude and longitude should be numeric parameter"}, 400

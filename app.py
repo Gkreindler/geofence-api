@@ -51,13 +51,15 @@ class GeoFence(Resource):
             # Read the shapefile
             dataframe = gpd.read_file(shapefile_path)
 
-            polygon_name = self.find_polygon_id(latitude, longitude, dataframe)
+            polygon_name, polygon_id = self.find_polygon_id(latitude, longitude, dataframe)
 
             if polygon_name == "-99":
                 return {"success": False, "message": "couldn't find in any grid"}, 200
+
             elif polygon_name == "-2":
                 return {"success": False, "message": "found in multiple polygons"}, 200
-            return {"success": True, "message": "in neighborhood " + polygon_name}, 200
+
+            return {"success": True, "message": "in neighborhood name=" + polygon_name + ", and id=", polygon_id}, 200
         
         else:
             return {"success": False, "message": "Bad request, latitude and longitude should be numeric parameter"}, 400
@@ -68,10 +70,12 @@ class GeoFence(Resource):
 
         if any(point_in_polygons):
             polygon_names = shapefile.loc[point_in_polygons, 'name']
-            if len(polygon_names) > 1:
-                return "-2"  # in multiple polygons, should never happen
-            else:
-                return polygon_names.iloc[0]
+            polygon_ids = shapefile.loc[point_in_polygons, 'id']
+            return polygon_names.iloc[0], int(polygon_ids.iloc[0])
+            # if len(polygon_names) > 1:
+            #     return "-2"  # in multiple polygons, should never happen
+            # else:
+            #     return polygon_names.iloc[0]
         else:
             return "-99"  # not in any of the polygons
 

@@ -182,13 +182,10 @@ class StartTask(Resource):
                            "message": "Cannot find neighborhood. Please move to a new location and try again."
                        }, 400
 
-            elif polygon_name == "-2":
-                return {"success": False, "message": "found in multiple polygons"}, 200
-
             if job_available:
                 return {"success": True, "message": "Start Task OK"}, 200
             else:
-                return {"success": True, "message": "Task not available here in neighborhood " + polygon_name}, 200
+                return {"success": False, "message": "Task not available here in neighborhood " + polygon_name}, 400
         else:
             return {"success": False, "message": "Error."}, 400
 

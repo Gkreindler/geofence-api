@@ -176,16 +176,19 @@ class StartTask(Resource):
 
             polygon_name, polygon_id, job_available = find_polygon_id(latitude, longitude, nbhds_gdf)
 
-            if polygon_name == "-99":
-                return {
-                           "success": False,
-                           "message": "Cannot find neighborhood. Please move to a new location and try again."
-                       }, 400
+            ## FOR DEBUGGING: ALWAYS APPROVE
+            return {"success": True, "message": "Start Task OK (debug mode)"}, 200
 
-            if job_available:
-                return {"success": True, "message": "Start Task OK"}, 200
-            else:
-                return {"success": False, "message": "Task not available here in neighborhood " + polygon_name}, 400
+            # if polygon_name == "-99":
+            #     return {
+            #                "success": False,
+            #                "message": "Cannot find neighborhood. Please move to a new location and try again."
+            #            }, 400
+            #
+            # if job_available:
+            #     return {"success": True, "message": "Start Task OK"}, 200
+            # else:
+            #     return {"success": False, "message": "Task not available here in neighborhood " + polygon_name}, 400
         else:
             return {"success": False, "message": "Error."}, 400
 

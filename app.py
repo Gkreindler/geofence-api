@@ -113,18 +113,19 @@ class Login(Resource):
         print("###xxx###:LOGIN. time=TIME,devid={},loginid={}".format(deviceid, loginid))
 
         # read login IDs
-        allids_path = 'tables/pilot8_allids.csv'
-        allids_df = pd.read_csv(allids_path)
+        # allids_path = 'tables/pilot8_allids.csv'
+        # allids_df = pd.read_csv(allids_path)
 
         if isInt(loginid):
+            loginid_str = str(loginid)
             loginid = int(loginid)
-            allids = list(allids_df["uniqueid"])
-            print("###xxx###:LOGIN. allids={}".format(allids))
+            # allids = list(allids_df["uniqueid"])
+            print("###xxx###:LOGIN. loginid={}".format(loginid))
 
-            if loginid in allids:
+            if len(loginid_str) == 6:
                 return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
             else:
-                return {"success": False, "message": "Unique ID not in the list {}, {}".format(deviceid, loginid)}, 400
+                return {"success": False, "message": "Unique ID should have 6 digits, but got {}".format(loginid)}, 400
         else:
             return {"success": False, "message": "Login or deviceid not integer or not provided"}, 400
 

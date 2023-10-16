@@ -25,31 +25,18 @@ def isInt(s):
     except ValueError:
         return False
 
+
 def find_polygon_id(latitude, longitude, nbhd_gdf):
     point = gpd.GeoSeries([Point(longitude, latitude)])
     point_in_polygons = nbhd_gdf.contains(point.geometry[0])
 
     if any(point_in_polygons):
         polygon_names = nbhd_gdf.loc[point_in_polygons, 'Name']
-        # polygon_ids = nbhd_gdf.loc[point_in_polygons, 'id']
 
-        # job_available = bool(1 - nbhd_gdf.loc[point_in_polygons, 'excluded'].min())
+        return polygon_names.iloc[0]
 
-        # print("returing:")
-        # print(polygon_names.iloc[0])
-        # print(polygon_ids.iloc[0])
-        # print("job available", job_available, " base on ", list(nbhd_gdf.loc[point_in_polygons, 'excluded']))
-
-        return polygon_names.iloc[0]\
-            # , int(polygon_ids.iloc[0])
-
-        # if len(polygon_names) > 1:
-        #     return "-2"  # in multiple polygons, should never happen
-        # else:
-        #     return polygon_names.iloc[0]
     else:
-        return "-99"\
-            # , "-99"  # not in any of the polygons
+        return "-99"
 
 
 class GeoFence(Resource):
@@ -77,14 +64,6 @@ class GeoFence(Resource):
             shapefile_path = 'shapefile_nairobi_L1/nairobi_L1.shp'
             nbhds_gdf = gpd.read_file(shapefile_path)
 
-            # read job offers
-            # jobs_path = 'tables/pilot8_unstructured_excluded.csv'
-            # jobs_df = pd.read_csv(jobs_path)
-            # jobs_df = jobs_df[jobs_df.uniqueid == loginid]
-            # jobs_df.rename(columns={'nbh_code': 'id'}, inplace=True)
-
-            # nbhds_gdf = nbhds_gdf.merge(jobs_df, on='id')
-
             polygon_name = find_polygon_id(latitude, longitude, nbhds_gdf)
 
             if polygon_name == "-99":
@@ -110,18 +89,13 @@ class Login(Resource):
         # logging
         print("###xxx###:LOGIN. time=TIME,devid={},loginid={}".format(deviceid, loginid))
 
-        # read login IDs
-        # allids_path = 'tables/pilot8_allids.csv'
-        # allids_df = pd.read_csv(allids_path)
-
         if isInt(loginid):
             loginid_str = str(loginid)
             loginid = int(loginid)
-            # allids = list(allids_df["uniqueid"])
             print("###xxx###:LOGIN. loginid={}".format(loginid))
 
             if len(loginid_str) == 6:
-                return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
+                return {"success": True, "message": "Login OK for login ID={}".format(loginid)}, 200
             else:
                 return {"success": False, "message": "Unique ID should have 6 digits, but got {}".format(loginid)}, 400
         else:
@@ -139,7 +113,7 @@ class Logout(Resource):
         if isInt(loginid):
             loginid = int(loginid)
 
-            return {"success": True, "message": "Login OK for {}, {}".format(deviceid, loginid)}, 200
+            return {"success": True, "message": "Login OK for login ID={}".format(loginid)}, 200
         else:
             return {"success": False, "message": "Login or deviceid not integer or not provided"}, 400
 
@@ -164,30 +138,11 @@ class StartTask(Resource):
             # Read the shapefile
             shapefile_path = 'shapefile_nairobi_L1/nairobi_L1.shp'
             nbhds_gdf = gpd.read_file(shapefile_path)
-
-            # read job offers
-            jobs_path = 'tables/pilot8_unstructured_excluded.csv'
-            jobs_df = pd.read_csv(jobs_path)
-            jobs_df = jobs_df[jobs_df.uniqueid == loginid]
-            jobs_df.rename(columns={'nbh_code': 'id'}, inplace=True)
-
-            nbhds_gdf = nbhds_gdf.merge(jobs_df, on='id')
-
-            polygon_name, polygon_id, job_available = find_polygon_id(latitude, longitude, nbhds_gdf)
+            polygon_name = find_polygon_id(latitude, longitude, nbhds_gdf)
 
             ## FOR DEBUGGING: ALWAYS APPROVE
-            return {"success": True, "message": "Start Task OK (debug mode)"}, 200
+            return {"success": True, "message": "Start Task OK in neighborhood " + str(polygon_name)}, 200
 
-            # if polygon_name == "-99":
-            #     return {
-            #                "success": False,
-            #                "message": "Cannot find neighborhood. Please move to a new location and try again."
-            #            }, 400
-            #
-            # if job_available:
-            #     return {"success": True, "message": "Start Task OK"}, 200
-            # else:
-            #     return {"success": False, "message": "Task not available here in neighborhood " + polygon_name}, 400
         else:
             return {"success": False, "message": "Error."}, 400
 
@@ -210,7 +165,12 @@ class StopTask(Resource):
             latitude = float(latitude)
             longitude = float(longitude)
 
-            return {"success": True, "message": "Start Task OK"}, 200
+            # Read the shapefile
+            shapefile_path = 'shapefile_nairobi_L1/nairobi_L1.shp'
+            nbhds_gdf = gpd.read_file(shapefile_path)
+            polygon_name = find_polygon_id(latitude, longitude, nbhds_gdf)
+
+            return {"success": True, "message": "Stop Task OK in neighborhood " + str(polygon_name)}, 200
         else:
             return {"success": False,
                     "message": "Login or deviceid not integer or lat or long not float, or arguments not provided"}, 400
